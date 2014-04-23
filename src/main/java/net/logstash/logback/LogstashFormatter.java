@@ -29,6 +29,7 @@ import ch.qos.logback.core.spi.ContextAware;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -153,8 +154,21 @@ public class LogstashFormatter {
 
     private JsonNode getJsonNode(ILoggingEvent event) {
         final Object[] args = event.getArgumentArray();
-
-        return MAPPER.convertValue(args, JsonNode.class);
+        JsonNode node = null;
+        try {
+			node = MAPPER.readValue(new String(args[0].toString()), JsonNode.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        //return MAPPER.convertValue(args[0], JsonNode.class);
+        return node;
     }
         
     private StackTraceElement extractCallerData(final ILoggingEvent event) {

@@ -257,7 +257,7 @@ public class LogstashEncoderTest {
         closeQuietly(outputStream);
         
         JsonNode node = MAPPER.readTree(outputStream.toByteArray());
-        
+       
         assertThat(MAPPER.convertValue(argArray, JsonNode.class).equals(node.get("json_message")), is(true));
     } 
 
