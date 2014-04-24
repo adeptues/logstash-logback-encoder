@@ -155,17 +155,18 @@ public class LogstashFormatter {
     private JsonNode getJsonNode(ILoggingEvent event) {
         final Object[] args = event.getArgumentArray();
         JsonNode node = null;
+        //TODO tidy this up for dealing with muiltiple arguments
         try {
-			node = MAPPER.readValue(new String(args[0].toString()), JsonNode.class);
+			node = MAPPER.readValue(args[0].toString(), JsonNode.class);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return MAPPER.createObjectNode();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return MAPPER.createObjectNode();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return MAPPER.createObjectNode();
 		}
         //return MAPPER.convertValue(args[0], JsonNode.class);
         return node;
